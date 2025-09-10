@@ -158,3 +158,14 @@ If we restart the VPS the runner will go offline. We will set it as a service la
 
 We are going to use a simple github workflow to check that the runner is up and able to accept jobs.
 You can find an example [here](.github/workflows/ping-runner.yaml).
+
+In order to run it manually we need to go to:
+
+https://github.com/<user>/<repo>/actions/workflows/ping-runner.yaml
+
+And go to the select that says `Run Workflow` expand and click on the green button that says `Run Workflow`.
+If the runner was online, the job should work without problems.
+
+> [!WARNING]
+> If you are working on a branch you will not see the workflow in the list of workflows.
+> All workflows need to be merged to main once so they are picked by github and listed.
