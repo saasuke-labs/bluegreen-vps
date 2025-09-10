@@ -37,9 +37,6 @@ jobs:
           name: app-binary
           path: /tmp
 
-      - name: Make binary executable
-        run: chmod +x /tmp/bluegreen
-
       - name: Stop existing application (if running)
         run: pkill -f "bluegreen" || true
 
@@ -47,8 +44,7 @@ jobs:
         run: |
           mkdir -p ~/app
           cp /tmp/bluegreen ~/app/bluegreen
-          chown $USER:$USER ~/app/bluegreen
-
+          chmod +x ~/app/bluegreen
       - name: Start application
         run: |
           cd ~/app
