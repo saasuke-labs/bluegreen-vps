@@ -1,0 +1,62 @@
+name: Build and Deploy
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: "1.24"
+
+      - name: Build application
+        run: |
+          GOOS=linux GOARCH=arm64 go build -o bluegreen main.go
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-binary
+          path: bluegreen
+
+  deploy:
+    needs: build
+    runs-on: [self-hosted, bluegreen-localvm]
+
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: app-binary
+          path: /tmp
+
+      - name: Make binary executable
+        run: chmod +x /tmp/bluegreen
+
+      - name: Stop existing application (if running)
+        run: pkill -f "bluegreen" || true
+
+      - name: Deploy binary
+        run: |
+          sudo mkdir -p ~/app
+          sudo cp /tmp/app ~/app/bluegreen
+          sudo chown $USER:$USER ~/app/bluegreen
+
+      - name: Start application
+        run: |
+          cd ~/app
+          nohup ./bluegreen > bluegreen.log 2>&1 &
+          echo "Application started"
+
+      - name: Verify deployment
+        run: |
+          sleep 2
+          curl -f http://localhost:8080/healthz || exit 1
+          echo "Deployment verified successfully"

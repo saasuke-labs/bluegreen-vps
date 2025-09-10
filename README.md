@@ -3,6 +3,8 @@
 ## Glossary
 
 - VPS: I will be using VPS in this Readme to avoid saying VM or VPS every time.
+- GH: Github
+- GHA: Github Actions
 
 ## Context
 
@@ -169,3 +171,20 @@ If the runner was online, the job should work without problems.
 > [!WARNING]
 > If you are working on a branch you will not see the workflow in the list of workflows.
 > All workflows need to be merged to main once so they are picked by github and listed.
+
+## Deploying the application
+
+Let's do out first deploy. What we want to do here is:
+
+- Build the application in GH Actions
+- Archive it so we can download it to the runner (our VPS).
+- Place the binary where we want.
+- Stop the running application.
+- Start the new one.
+
+> [!NOTE]
+> We start without the blue/green deployment. We will stop the
+> running server and start the new one, disrupting our 0 users.
+
+We will also run the workflow manually for now.
+Again, you can find a workflow that does exactly that [here](/Users/toni/Projects/bluegreen-vps/.github/workflows/build-deploy.yaml)
