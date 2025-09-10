@@ -1,5 +1,11 @@
 # Blue Green VPS
 
+## Glossary
+
+- VPS: I will be using VPS in this Readme to avoid saying VM or VPS every time.
+
+## Context
+
 Feasibility study for deploying golang apps to private VPS and serve them using Cloudflare. Based on levelsio style but with some checks in place + adapted for compiled languages.
 
 ## Deployment Approaches Comparison
@@ -108,7 +114,7 @@ The result is a deployment strategy that keeps the simplicity spirit of levelsio
 
 ## Setup
 
-### VM/VPS
+### VPS
 
 #### Local env
 
@@ -124,3 +130,31 @@ This will create a VM with ubuntu called bluegreen.
 #### External VPS
 
 For production/staging you can create a VPS where you need (AWS EC2, Hetzner, etc). Once you have it we can continue with the same process.
+
+### Runner Installation
+
+We will set up a GH Runner within the VPS so we can use it to run commands within.
+
+- Open a shell to the VPS
+  In case of using multipass: multipass shell bluegreen
+- Go to https://github.com/<user>/<repo>/settings/actions/runners
+  For example: https://github.com/saasuke-labs/bluegreen-vps/settings/actions/runners
+- Click on `New Self-Hosted Runner`
+- Choose the image of the runner and architecture of the runner.
+  For example running multipass in a M-series Mac would be: Linux - ARM64
+- Run the scripts shown on-screen within the VPS shell.
+  During the process you will need to set some variables:
+  - Group name: empty
+  - Runner name: set something you can easily identify.
+    For example I will use `bluegreen-localvm` for my local vm because I plan to create another VPS with its runner in the cloud.
+  - Labels: enter some labels in a similar fashion. We will use them to select the jobs we want to run in the VPS.
+    I am setting `bluegreen-localvm`
+  - Work folder: I am leaving it as the default `_work`.
+
+If you go to the runners list again you should find your runner. Online and idle.
+If we restart the VPS the runner will go offline. We will set it as a service later.
+
+## Testing the runner
+
+We are going to use a simple github workflow to check that the runner is up and able to accept jobs.
+You can find an example [here](.github/workflows/ping-runner.yaml).

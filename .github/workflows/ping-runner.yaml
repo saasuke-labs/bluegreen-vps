@@ -1,0 +1,12 @@
+name: Ping Runner
+
+on:
+  workflow_dispatch:
+
+jobs:
+  ping:
+    runs-on: [self-hosted, bluegreen-localvm]
+
+    steps:
+      - name: Echo Pong
+        run: echo "Pong!"
