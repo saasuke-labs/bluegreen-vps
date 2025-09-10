@@ -188,3 +188,23 @@ Let's do out first deploy. What we want to do here is:
 
 We will also run the workflow manually for now.
 Again, you can find a workflow that does exactly that [here](/Users/toni/Projects/bluegreen-vps/.github/workflows/build-deploy.yaml)
+
+The workflow succeeded which means that our server is running!
+
+In order to test from the host machine and opening the site in our browser we need 2 things:
+
+- Discover the IP address of our VPS.
+- Forward the port.
+
+If you are using `multipass` in your local machine you can run these commands:
+
+```shell
+multipass exec bluegreen -- sudo ufw allow 8080
+multipass list | grep bluegreen
+```
+
+You should be able to open http://<IP>:8080/healthz and see a fantastic:
+
+```json
+{ "message": "ok" }
+```
