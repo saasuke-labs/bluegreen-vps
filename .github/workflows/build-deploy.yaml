@@ -48,7 +48,7 @@ jobs:
       - name: Start application
         run: |
           cd ~/app
-          nohup ./bluegreen > bluegreen.log 2>&1 &
+          nohup ./bluegreen &
           echo "Application started"
 
       - name: Verify deployment
