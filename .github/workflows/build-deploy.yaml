@@ -46,7 +46,7 @@ jobs:
       - name: Deploy binary
         run: |
           sudo mkdir -p ~/app
-          sudo cp /tmp/app ~/app/bluegreen
+          sudo cp /tmp/bluegreen ~/app/bluegreen
           sudo chown $USER:$USER ~/app/bluegreen
 
       - name: Start application
