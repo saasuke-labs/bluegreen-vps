@@ -48,10 +48,12 @@ jobs:
       - name: Start application
         run: |
           cd ~/app
-          # Start the process in a way that survives the runner session
-          setsid ./bluegreen </dev/null >/dev/null 2>&1 &
-          disown
+          echo "Starting as user: $(whoami)"
+          # Use sudo to run as ubuntu user consistently
+          sudo -u ubuntu setsid ~/app/bluegreen </dev/null >/dev/null 2>&1 &
           echo "Application started"
+          sleep 1
+          sudo ps aux | grep bluegreen | grep -v grep || echo "Process not found"
 
       - name: Verify deployment
         run: |
