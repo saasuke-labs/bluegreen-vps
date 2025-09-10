@@ -105,3 +105,22 @@ ghagent -- deploys --> green
 5. **Reduced Human Error**: Automated processes reduce the risk of manual deployment mistakes.
 
 The result is a deployment strategy that keeps the simplicity spirit of levelsio while being production-ready
+
+## Setup
+
+### VM/VPS
+
+#### Local env
+
+Create a VM in your local machine. I used `multipass`.
+you can install `multipass` with brew in MacOs.
+
+```shell
+ multipass launch 24.04 --name bluegreen --cpus 2 --memory 4G --disk 30G
+```
+
+This will create a VM with ubuntu called bluegreen.
+
+#### External VPS
+
+For production/staging you can create a VPS where you need (AWS EC2, Hetzner, etc). Once you have it we can continue with the same process.
