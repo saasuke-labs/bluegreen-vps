@@ -18,7 +18,7 @@ jobs:
 
       - name: Build application
         run: |
-          GOOS=linux GOARCH=arm64 go build -o bluegreen main.go
+          GOOS=linux GOARCH=arm64 go build -o bluegreen cmd/main.go
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
