@@ -54,7 +54,7 @@ jobs:
           cd ~/app
           echo "Starting as user: $(whoami)"
           # Use sudo to run as ubuntu user consistently
-          sudo -u ubuntu setsid ~/app/bluegreen </dev/null >/dev/null 2>&1 &
+          sudo -u ubuntu setsid PORT=8081 COLOR=blue ~/app/bluegreen </dev/null >/dev/null 2>&1 &
           echo "Application started"
           sleep 1
           sudo ps aux | grep bluegreen | grep -v grep || echo "Process not found"
