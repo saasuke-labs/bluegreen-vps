@@ -24,31 +24,50 @@ jobs:
         run: |
           GOOS=linux GOARCH=arm64 go build -o bluegreen cmd/main.go
 
-      - name: Upload artifact
+      - name: Upload application artifact
         uses: actions/upload-artifact@v4
         with:
           name: app-binary
           path: bluegreen
+
+      - name: Upload nginx config artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: nginx-config
+          path: nginx/
 
   deploy:
     needs: build
     runs-on: [self-hosted, bluegreen-local-vm]
 
     steps:
-      - name: Download artifact
+      - name: Download application artifact
         uses: actions/download-artifact@v4
         with:
           name: app-binary
           path: /tmp
 
-      - name: Stop existing application (if running)
-        run: pkill -f "bluegreen" || true
+      - name: Download nginx config artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: nginx-config
+          path: /tmp/nginx
 
-      - name: Deploy binary
+      - name: Deploy application binary
         run: |
           mkdir -p ~/app
           cp /tmp/bluegreen ~/app/bluegreen
           chmod +x ~/app/bluegreen
+
+      - name: Deploy nginx configuration
+        run: |
+          # Copy all config files to /etc/nginx/
+          sudo cp /tmp/nginx/*.conf /etc/nginx/
+          # Link blue configuration to upstream.conf
+          sudo ln -sf /etc/nginx/blue.conf /etc/nginx/upstream.conf
+          # Test nginx configuration
+          sudo nginx -t
+
       - name: Start application
         run: |
           cd ~/app
@@ -59,8 +78,12 @@ jobs:
           sleep 1
           sudo ps aux | grep bluegreen | grep -v grep || echo "Process not found"
 
+      - name: Reload nginx
+        run: |
+          sudo systemctl reload nginx
+
       - name: Verify deployment
         run: |
           sleep 2
-          curl -f http://localhost:8081/healthz || exit 1
+          curl -f http://localhost/healthz || exit 1
           echo "Deployment verified successfully"

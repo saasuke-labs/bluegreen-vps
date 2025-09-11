@@ -207,15 +207,45 @@ In order to test from the host machine and opening the site in our browser we ne
 If you are using `multipass` in your local machine you can run these commands:
 
 ```shell
-multipass exec bluegreen -- sudo ufw allow 8080
+multipass exec bluegreen -- sudo ufw allow 8081
 multipass list | grep bluegreen
 ```
 
-You should be able to open http://<IP>:8080/healthz and see a fantastic:
+You should be able to open http://<IP>:8081/healthz and see a fantastic:
 
 ```json
 { "message": "ok" }
 ```
+
+### Nginx Installation
+
+Install and configure nginx to act as a reverse proxy for our blue-green deployment:
+
+```shell
+# Install nginx
+sudo apt update
+sudo apt install nginx -y
+
+# Start and enable nginx
+sudo systemctl start nginx
+sudo systemctl enable nginx
+
+# Verify nginx is running
+sudo systemctl status nginx
+```
+
+### Nginx Configuration
+
+The nginx configuration uses a blue-green deployment strategy. We have three configuration files in the `nginx/` directory:
+
+- `nginx/blue.conf` - Points nginx to the blue instance (port 8081)
+- `nginx/green.conf` - Points nginx to the green instance (port 8082)
+- `nginx/upstream.conf` - The active configuration that nginx uses
+
+The deployment process works by creating a symbolic link from `upstream.conf` to either `blue.conf` or `green.conf` (we will do it via CI).
+After creating or updating the symlink, reload nginx to apply changes:
+
+This allows us to switch between blue and green deployments with zero downtime by simply updating the symlink and reloading nginx.
 
 ## Troubleshooting
 
