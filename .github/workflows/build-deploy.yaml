@@ -3,6 +3,10 @@ name: Build and Deploy
 on:
   workflow_dispatch:
 
+concurrency:
+  group: build-deploy-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build:
     runs-on: ubuntu-latest
