@@ -187,9 +187,17 @@ Let's do out first deploy. What we want to do here is:
 > running server and start the new one, disrupting our 0 users.
 
 We will also run the workflow manually for now.
-Again, you can find a workflow that does exactly that [here](/Users/toni/Projects/bluegreen-vps/.github/workflows/build-deploy.yaml)
 
-The workflow succeeded which means that our server is running!
+The application requires two command line arguments:
+
+- `--port`: The port to listen on (e.g., 8081)
+- `--color`: A color value that will be returned in the `/status` endpoint
+
+Example usage:
+
+```bash
+./bluegreen --port 8081 --color blue
+```
 
 In order to test from the host machine and opening the site in our browser we need 2 things:
 
