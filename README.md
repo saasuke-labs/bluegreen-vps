@@ -208,3 +208,41 @@ You should be able to open http://<IP>:8080/healthz and see a fantastic:
 ```json
 { "message": "ok" }
 ```
+
+## Troubleshooting
+
+### Runner Registration: Clock Sync Error
+
+If you see "The local machine's clock may be out of sync with the server time by more than five minutes" when registering the runner:
+
+```shell
+# Force time sync
+sudo systemctl stop systemd-timesyncd
+sudo systemctl start systemd-timesyncd
+
+# Verify correct time
+timedatectl
+```
+
+If NTP sync doesn't work, you can set the time manually:
+
+```shell
+# Set the correct date and time (adjust to your current time)
+sudo timedatectl set-time "2024-09-11 15:30:00"
+
+# Enable NTP to keep it synced going forward
+sudo timedatectl set-ntp true
+
+# Verify
+timedatectl
+```
+
+Alternatively, restart the VM to reset the clock:
+
+```shell
+# From your host machine (for multipass)
+multipass stop bluegreen
+multipass start bluegreen
+```
+
+The VM clock can get out of sync when suspended for extended periods. This is common with local VMs that go to sleep or hibernate. If the problem persists, consider using a dedicated VPS provider for production deployments.

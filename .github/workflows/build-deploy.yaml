@@ -32,7 +32,7 @@ jobs:
 
   deploy:
     needs: build
-    runs-on: [self-hosted, bluegreen-localvm]
+    runs-on: [self-hosted, bluegreen-local-vm]
 
     steps:
       - name: Download artifact
